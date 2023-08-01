@@ -1,6 +1,6 @@
 <template>
   <div class="Consultpay">
-    <van-nav-bar title="支付" left-arrow @click-left="router.go(-1)" />
+    <myTapbar title="支付" />
     <div class="pay">
       <!-- 价格区域 -->
       <div>
@@ -122,9 +122,11 @@
 </template>
 
 <script setup lang="ts">
+// 引入导航栏子组件
+import myTapbar from '@/components/my-tapbar.vue'
 import { useRouter, useRoute } from 'vue-router'
-// 引入接口 计算就诊信息和抵扣信息    支付接口
-import { CalculateVisitInformation, payInterface } from './api/api'
+// 引入接口 计算就诊信息和抵扣信息    支付接口        获取订单id
+import { CalculateVisitInformation, payInterface, getOrider } from './api/api'
 //引入统一的code校验
 import { ECode } from '@/utils/PublicMethods'
 //引入pinia
@@ -174,10 +176,22 @@ const priceAll = computed(() => {
     obj.objs.couponDeduction
   ).toFixed(2)
 })
+const ConsultationOrderId = ref()
 //立即支付打开状态
 const ImmediatePayment = () => {
   if (PaymentAgreementFlag.value) {
     showBottom.value = true
+
+    getOrider({
+      type: 2,
+      pictures: user.imgTxt?.pictures,
+      illnessDesc: user.imgTxt?.DateOfIllness,
+      patientId: user.patientInfo?.id
+    }).then((res) => {
+      if (res.code == ECode.Success) {
+        ConsultationOrderId.value = res.data.id
+      }
+    })
   } else {
     showToast('请勾选我已同意支付协议')
   }
@@ -202,12 +216,10 @@ const quickPay = () => {
   if (paymentMethod.value === undefined) return showToast('请选择支付方式')
   showLoadingToast({ message: '跳转支付', duration: 0 })
   payInterface({
-    orderId: user.patientInfo?.idCard,
+    orderId: ConsultationOrderId.value,
     paymentMethod: paymentMethod.value,
-    payCallback: 'http://localhost:5173/room'
+    payCallback: 'http://127.0.0.1:5173/room'
   }).then((res) => {
-    console.log(res)
-
     window.location.href = res.data.payUrl
   })
 }

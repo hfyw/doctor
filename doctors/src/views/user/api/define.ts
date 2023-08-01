@@ -132,6 +132,48 @@ interface delDate {
   id: string | undefined
 }
 
+// 订单详情的请求校验
+interface OrderDetailDate {
+  orderId: string
+}
+//订单详情的响应Res校验
+
+interface OrderDetailRes {
+  id: string
+  orderNo: string
+  type: string
+  createTime: string
+  patientInfo: OrderDetailResPatientInfo
+  illnessDesc: string
+  recordId: string
+  status: number
+  statusValue: string
+  cancelProcess?: any
+  countdown: number
+  payment: number
+  pointDeduction: number
+  couponDeduction: number
+  actualPayment: number
+  creator: string
+  evaluateFlag: number
+  pictures: any[]
+  illnessTime: number
+  consultFlag: number
+}
+interface OrderDetailResPatientInfo {
+  name: string
+  idCard: string
+  gender: number
+  genderValue: string
+  age: number
+  id: string
+}
+
+//订单详情的响应Res赋值校验
+interface OrderOrders {
+  orders: OrderDetailRes
+}
+
 export type {
   UserInfoRes,
   obj,
@@ -143,5 +185,8 @@ export type {
   PatientRes,
   PatientResObj,
   PatientDate,
-  delDate
+  delDate,
+  OrderDetailDate,
+  OrderDetailRes,
+  OrderOrders
 }

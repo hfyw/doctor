@@ -19,6 +19,18 @@ export type ImgTxt = {
   DateOfIllness: string
   /** 是否去医院就诊过*/
   VisitStatus: string
+  /** 图片描述 */
+  pictures?: Picture[]
+}
+interface Picture {
+  /**
+   * 图片id
+   */
+  id: string
+  /**
+   * 图片url
+   */
+  url: string
 }
 // 患者信息
 export interface patientInfo {

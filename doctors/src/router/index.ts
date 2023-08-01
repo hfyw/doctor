@@ -98,6 +98,12 @@ const routes = [
         name: 'patient',
         meta: '选择患者',
         component: () => import('../views/user/patient.vue')
+      },
+      {
+        path: 'askIllnessDetail',
+        name: 'askIllnessDetail',
+        meta: '问诊详情',
+        component: () => import('../views/user/askIllnessDetail.vue')
       }
     ]
   },

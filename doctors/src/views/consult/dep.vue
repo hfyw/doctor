@@ -1,6 +1,6 @@
 <template>
   <div class="dep">
-    <van-nav-bar title="选择科室" left-arrow @click-left="router.go(-1)" />
+    <myTapbar title="选择科室" />
     <div class="content">
       <div class="left">
         <div
@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import myTapbar from '@/components/my-tapbar.vue'
 import { QueryAllDepartments } from './api/api'
 import { useRouter } from 'vue-router'
 import { ECode } from '@/utils/PublicMethods'

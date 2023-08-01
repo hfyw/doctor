@@ -1,12 +1,6 @@
 <template>
   <div class="fast">
-    <van-nav-bar
-      title="极速问诊"
-      right-text="问诊记录"
-      left-arrow
-      @click-left="goBack"
-      @click-right="onConsultationRecord"
-    />
+    <myTapbar title="极速问诊" buttonName="问诊记录" @rightClick="rightClick" />
     <div class="contentBox">
       <div class="img">
         <img
@@ -42,14 +36,13 @@
 </template>
 
 <script setup lang="ts">
+//引入导航栏
+import myTapbar from '@/components/my-tapbar.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-// 返回上一级
-const goBack = () => {
-  router.go(-1)
-}
+
 //去问诊记录
-const onConsultationRecord = () => {
+const rightClick = () => {
   router.push('/user/consult')
 }
 //选择科室

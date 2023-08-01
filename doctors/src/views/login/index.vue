@@ -85,17 +85,21 @@
 
       <div class="ThirdPartyLogin">
         <p>第三方登录</p>
-        <div
-          style="
-            font-family: iconfont;
-            color: #00aaff;
-            font-size: 80px;
-            text-align: center;
-            margin-top: 20px;
-          "
+        <a
+          href="https://graph.qq.com/oauth2.0/authorize?client_id=102015968&response_type=code&redirect_uri=1"
         >
-          &#xe65e;
-        </div>
+          <div
+            style="
+              font-family: iconfont;
+              color: #00aaff;
+              font-size: 80px;
+              text-align: center;
+              margin-top: 20px;
+            "
+          >
+            &#xe65e;
+          </div>
+        </a>
       </div>
     </div>
   </div>

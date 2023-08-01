@@ -1,6 +1,6 @@
 <template>
   <div class="patient">
-    <van-nav-bar title="选择患者" left-arrow @click-left="router.go(-1)" />
+    <myTapbar title="选择患者" />
     <div class="patientBox">
       <div class="patient-change">
         <h3 style="font-weight: 100; margin-bottom: 10px">请选择患者信息</h3>
@@ -45,6 +45,8 @@
 </template>
 
 <script setup lang="ts">
+// 引入导航栏子组件
+import myTapbar from '@/components/my-tapbar.vue'
 import { useRouter } from 'vue-router'
 import myDrawer from './components/Drawer.vue'
 import { ref } from 'vue'

@@ -1,6 +1,7 @@
 <template>
   <div class="illness">
-    <van-nav-bar title="图文问诊" left-arrow @click-left="router.go(-1)" />
+    <myTapbar title="图文问诊" />
+
     <!-- 大盒子 -->
     <div class="PictureAndTextBox">
       <!-- 上边图文 -->
@@ -83,11 +84,14 @@
 </template>
 
 <script setup lang="ts">
+//导航栏组件
+import myTapbar from '@/components/my-tapbar.vue'
 import { useRouter } from 'vue-router'
 import { reactive, ref, computed, onBeforeMount } from 'vue'
 import { useUserStore } from '@/stores'
 import * as TS from './api/define'
 import { showConfirmDialog } from 'vant'
+import { uploadApi } from './api/api'
 const user = useUserStore()
 const router = useRouter()
 const flag = ref(false) //判断是否回填
@@ -96,13 +100,15 @@ interface Form {
     txt: string | undefined
     DateOfIllness: string
     VisitStatus: string
+    pictures: TS.Picture[]
   }
 }
 const form = reactive<Form>({
   forms: {
     txt: '',
     DateOfIllness: '',
-    VisitStatus: ''
+    VisitStatus: '',
+    pictures: []
   }
 })
 let activeDateOfIllnessList = ref() //定义选中的样式用的变量
@@ -119,7 +125,7 @@ const VisitStatusList = ref([
   { name: '就诊过', id: '0' },
   { name: '没就诊过', id: '1' }
 ])
-const fileList = ref([])
+const fileList = ref<TS.Picture[]>([])
 //选择患病时间
 const changeDateOfIllness = (v: string) => {
   activeDateOfIllnessList.value = v
@@ -137,13 +143,25 @@ const uploaderImg = (file: TS.FileRes) => {
   file.status = 'uploading'
   file.message = '上传中...'
 
-  setTimeout(() => {
-    file.status = 'done'
-    file.message = null
-  }, 1000)
+  uploadApi(file)
+    .then((res) => {
+      console.log(res)
+
+      if (res.data.code == 10000) {
+        file.status = 'done'
+        file.message = '上传成功'
+        form.forms.pictures.push(res.data.data)
+      }
+    })
+    .catch(() => {
+      file.status = 'failed'
+      file.message = '上传失败'
+    })
 }
 //下一步
 const next = () => {
+  console.log(form.forms)
+
   user.setImgTxt(form.forms)
   form.forms.DateOfIllness = activeDateOfIllnessList.value
   form.forms.VisitStatus = activeVisitStatusList.value
@@ -168,20 +186,23 @@ const ButtonStatus = computed(() => {
 })
 // 加载时显示是否回填
 onBeforeMount(() => {
-  showConfirmDialog({
-    title: '温馨提示',
-    message: '是否恢复您之前填写的病情信息呢？'
-  })
-    .then(() => {
-      flag.value = true
-      form.forms.txt = user.imgTxt?.txt
-      activeDateOfIllnessList.value = user.imgTxt?.DateOfIllness
-      activeVisitStatusList.value = user.imgTxt?.VisitStatus
-      console.log(form.forms)
+  setTimeout(() => {
+    showConfirmDialog({
+      title: '温馨提示',
+      message: '是否恢复您之前填写的病情信息呢？'
     })
-    .catch(() => {
-      flag.value = false
-    })
+      .then(() => {
+        flag.value = true
+        form.forms.txt = user.imgTxt?.txt
+        activeDateOfIllnessList.value = user.imgTxt?.DateOfIllness
+        activeVisitStatusList.value = user.imgTxt?.VisitStatus
+        user.imgTxt?.pictures?.forEach((i) => fileList.value.push(i))
+        user.imgTxt?.pictures?.forEach((i) => form.forms.pictures.push(i))
+      })
+      .catch(() => {
+        flag.value = false
+      })
+  }, 1)
 })
 </script>
 

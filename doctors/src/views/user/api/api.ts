@@ -25,3 +25,6 @@ export const DeletePatient = (data: TS.delDate) =>
 //取消订单
 export const CancelOrder = (data: TS.delDate) =>
   api.put(`patient/order/cancel/${data.id}`)
+//获取详情订单信息
+export const getOrder = (data: TS.OrderDetailDate) =>
+  api.get<TS.OrderDetailRes>('patient/consult/order/detail', data)
